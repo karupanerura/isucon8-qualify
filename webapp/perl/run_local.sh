@@ -6,5 +6,6 @@ export DB_HOST=localhost
 export DB_PORT=3306
 export DB_USER=isucon
 export DB_PASS=isucon
+export REDIS_HOST=localhost
 
-exec plackup -R lib -R app.psgi -R views -p 8080 app.psgi
+exec plackup -p 8080 -s Monoceros -MCarp::Always -e 'enable "Static", path => qr!^/(?:(?:css|js|img)/|favicon\.ico$)!, root => "./public"' --max-workers 8 --min-reqs-per-child 4096 --max-reqs-per-child 8192 --timeout 3 -E production -a app.psgi

@@ -1,0 +1,16 @@
+[Unit]
+Description = isucon8 qualifier webapp in perl
+
+[Service]
+WorkingDirectory=/home/isucon/torb/webapp/perl
+EnvironmentFile=/home/isucon/torb/webapp/env.sh
+
+ExecStart = /home/isucon/local/perl/bin/carton exec -- start_server --path /tmp/torb.sock --pid-file /tmp/torb.pid -- plackup -s Gazelle --min-reqs-per-child 4096 --max-reqs-per-child 8192 --max-workers 20 --timeout 3 -E production -a app.psgi
+
+Restart   = always
+Type      = simple
+User      = isucon
+Group     = isucon
+
+[Install]
+WantedBy = multi-user.target

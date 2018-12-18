@@ -6,6 +6,13 @@ requires 'Plack::Builder';
 requires 'Plack::Session';
 requires 'Starlet';
 requires 'Time::Moment';
+requires 'Redis::Fast';
+requires 'Gazelle';
+requires 'Monoceros';
+requires 'HTTP::Parser::XS';
+requires 'HTTP::Headers::Fast';
+requires 'EV';
+requires 'Server::Starter';
 
 on configure => sub {
     requires 'ExtUtils::MakeMaker';

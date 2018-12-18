@@ -15,6 +15,6 @@ if [ ! -f "$DB_DIR/isucon8q-initial-dataset.sql.gz" ]; then
   exit 1
 fi
 
-mysql -uisucon torb -e 'ALTER TABLE reservations DROP KEY event_id_and_sheet_id_idx'
-gzip -dc "$DB_DIR/isucon8q-initial-dataset.sql.gz" | mysql -uisucon torb
-mysql -uisucon torb -e 'ALTER TABLE reservations ADD KEY event_id_and_sheet_id_idx (event_id, sheet_id)'
+gzip -dc "$DB_DIR/isucon8q-initial-dataset.sql.gz" \
+    | perl -MTime::Moment -pe 's/"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})",\s*(?:NULL|"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})")/$t1=Time::Moment->from_string($1.'Z', lenient => 1)->epoch;$t2=$2 ? Time::Moment->from_string($2.'Z', lenient => 1)->epoch : 0;$t3=$t2 > $t1 ? $t2 : $t1;$t2||="NULL";"$t1, $t2, $t3"/eg;s/canceled_at\)/canceled_at, updated_at\)/g' \
+    | mysql -uisucon torb
